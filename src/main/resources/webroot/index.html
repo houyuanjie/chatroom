@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome to ChatRoom</title>
+    <!-- JQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.js"
+      integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+      crossorigin="anonymous"
+    ></script>
+    <!-- SockJS -->
+    <script src="https://unpkg.io/sockjs-client@1.5.0/dist/sockjs.min.js"></script>
+    <!-- Vert.x event bus bridge -->
+    <script src="https://unpkg.io/@vertx/eventbus-bridge-client.js@1.0.0-1/vertx-eventbus.js"></script>
+  </head>
+  <body>
+    <div>
+      <label for="textarea">ChatRoom</label><br />
+      <textarea id="textarea" rows="10" cols="100"></textarea>
+    </div>
+    <div>
+      <label for="name-input">昵称</label>
+      <input id="name-input" type="text" />
+    </div>
+    <div>
+      <label for="content-input">消息</label>
+      <input id="content-input" type="text" />
+    </div>
+    <script type="text/javascript">
+      const eventBus = new EventBus("/eventbus");
+      eventBus.onopen = () => {
+        // 注册回调处理接收到的新消息
+        eventBus.registerHandler("chatroom", (error, message) => {
+          const body = message.body;
+          const textarea = $("#textarea").val((index, value) => {
+            return value + `${body.name}:${body.content}\n`;
+          });
+        });
+
+        // 发送新消息
+        const contentInput = $("#content-input");
+        contentInput.on("keydown", (event) => {
+          const name = $("#name-input").val();
+          const content = contentInput.val();
+
+          if (event.key === "Enter") {
+            eventBus.publish("chatroom", {
+              name: name,
+              content: content,
+            });
+
+            contentInput.val("");
+          }
+        });
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+plugins {
+    id 'scala'
+    id 'application'
+}
+
+group 'icu.harx'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    def scalaLibrary = 'org.scala-lang:scala3-library_3'
+    def scalaVersion = '3.2.0'
+    def vertxVersion = '4.3.4'
+
+    implementation "${scalaLibrary}:${scalaVersion}"
+    implementation "io.vertx:vertx-core:${vertxVersion}"
+    implementation "io.vertx:vertx-web:${vertxVersion}"
+}
+
+application {
+    mainClass = 'icu.harx.Server'
+}

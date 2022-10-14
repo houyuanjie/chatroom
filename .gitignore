@@ -1,0 +1,12 @@
+.vscode
+.idea
+
+.gradle
+.bloop
+.metals
+
+gradle
+
+bin
+build
+target
